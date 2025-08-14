@@ -4,6 +4,7 @@ from typing import Literal, Optional, Any, List
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+from app.config.settings import settings
 ProviderName = Literal["openai", "gemini"]
 
 def get_chat_model(
@@ -20,6 +21,7 @@ def get_chat_model(
         _model = model or "gpt-3.5-turbo"
         return ChatOpenAI(
             model=_model,
+            api_key=settings.OPENAI_API_KEY,
             temperature=temperature,
             streaming=streaming,
             callbacks=callbacks,
@@ -29,8 +31,9 @@ def get_chat_model(
         _model = model or "gemini-2.0-flash"
         return ChatGoogleGenerativeAI(
             model=_model,
+            api_key=settings.GOOGLE_API_KEY,
             temperature=temperature,
-            streaming=streaming,
+            disable_streaming=not streaming,
             callbacks=callbacks,
             **kwargs,
         )
